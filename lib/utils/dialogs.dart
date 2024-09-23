@@ -45,10 +45,10 @@ void showRulesDialog(BuildContext context) {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Игр сыграно: $gamesPlayed'),
-              Text('Игр выиграно: $gamesWon'),
+              Text('Игр сыграно: $GameLogic.gamesPlayed'),
+              Text('Игр выиграно: $GameLogic.gamesWon'),
               Text(
-                  'Процент побед: ${gamesPlayed > 0 ? (gamesWon / gamesPlayed * 100).toStringAsFixed(1) : 0}%'),
+                  'Процент побед: ${GameLogic.gamesPlayed > 0 ? (GameLogic.gamesWon / gamesPlayed * 100).toStringAsFixed(1) : 0}%'),
             ],
           ),
           actions: <Widget>[
