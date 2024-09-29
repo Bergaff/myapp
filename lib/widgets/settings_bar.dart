@@ -9,44 +9,68 @@ class SettingsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 210,
-      height: 48,
-      padding: const EdgeInsets.all(0),
-      margin: const EdgeInsets.only(bottom: 30),
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.vertical(
-          bottom: Radius.circular(20),
+    return Padding(
+       padding: EdgeInsets.only(bottom: 12.0),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 200),
+        child: CustomPaint(
+          painter: TrapezoidPainter(),
+          child: Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.rule, color: Color(0xFFEC6043)),
+                  onPressed: () => showRulesDialog(context),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.settings,
+                      color: Color(0xFFEC6043)),
+                  onPressed: () => showSettingsDialog(context),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.bar_chart,
+                      color: Color(0xFFEC6043)),
+                  onPressed: () => showStatisticsDialog(context, gameLogic),
+                ),
+              ],
+            ),
+          ),
         ),
-        border: Border(
-          bottom: BorderSide(color: Colors.deepOrangeAccent, width: 2),
-          left: BorderSide(color: Colors.deepOrangeAccent, width: 2),
-          right: BorderSide(color: Colors.deepOrangeAccent, width: 2),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: ListTile(
-              leading: const Icon(Icons.rule, color: Colors.deepOrangeAccent),
-              onTap: () => showRulesDialog(context),
-            ),
-          ),
-          Expanded(
-            child: ListTile(
-              leading: const Icon(Icons.settings, color: Colors.deepOrangeAccent),
-              onTap: () => showSettingsDialog(context),
-            ),
-          ),
-          Expanded(
-            child: ListTile(
-              leading: const Icon(Icons.bar_chart, color: Colors.deepOrangeAccent),
-              onTap: () => showStatisticsDialog(context, gameLogic),
-            ),
-          ),
-        ],
       ),
     );
   }
+}
+
+class TrapezoidPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Color(0xFFEC6043)
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
+
+    final radius = 20.0; // Радиус закругления нижних углов
+    final path = Path()
+      ..moveTo(size.width, 0)
+      ..lineTo(size.width * 0.95, size.height - radius * 0.6)
+      ..arcToPoint(
+        Offset(size.width * 0.95 - radius, size.height),
+        radius: Radius.circular(radius),
+        clockwise: true,
+      )
+      ..lineTo(size.width * 0.05 + radius, size.height)
+      ..arcToPoint(
+        Offset(size.width * 0.05, size.height - radius * 0.6),
+        radius: Radius.circular(radius),
+        clockwise: true,
+      )
+      ..lineTo(0, 0);
+    //..close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

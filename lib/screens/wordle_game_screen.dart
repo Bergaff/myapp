@@ -26,13 +26,17 @@ class _WordleGameScreenState extends State<WordleGameScreen> {
     setState(() {
       gameLogic.makeGuess();
       if (gameLogic.gameOver) {
-        if (gameLogic.currentGuess == gameLogic.targetGrade) {
+        if (gameLogic.isWin) {
           showWinDialog(context, gameLogic);
         } else {
           showLoseDialog(context, gameLogic);
         }
       }
     });
+  }
+
+  void startNewGame() {
+    setState(() {gameLogic.startNewGame();});
   }
 
   void onCharacterPressed(String char) {
@@ -47,25 +51,32 @@ class _WordleGameScreenState extends State<WordleGameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
+        verticalDirection: VerticalDirection.down,
         children: [
           SettingsBar(gameLogic: gameLogic),
           Expanded(
             child: GameBoard(gameLogic: gameLogic),
           ),
           Padding(
-            padding: const EdgeInsets.all(18.0),
+            padding: const EdgeInsets.all(12.0),
             child: ElevatedButton(
-              onPressed: makeGuess,
+              onPressed: gameLogic.gameOver?startNewGame:makeGuess,
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(8),
                 minimumSize: Size(40, 40),
                 backgroundColor: const Color.fromARGB(255, 245, 222, 165),
-                side: const BorderSide(color: Colors.deepOrangeAccent, width: 2),
+                side:
+                    const BorderSide(color: Color(0xFFEC6043), width: 2),
               ),
-              child: Text('Подтвердить', style: TextStyle(fontSize: 14, color: Colors.deepOrangeAccent)),
+              child: Text(gameLogic.gameOver ? 'Новая игра' : 'Подтвердить',
+                  style:
+                      TextStyle( color: Color(0xFFEC6043), fontWeight: FontWeight.bold)),
             ),
           ),
-          GameKeyboard(onCharacterPressed: onCharacterPressed),
+          GameKeyboard(
+            onCharacterPressed: onCharacterPressed,
+            gameLogic: gameLogic,
+          ),
         ],
       ),
     );
